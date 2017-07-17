@@ -2,14 +2,14 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Plotly from 'plotly.js';
 
-export default class Listener_maxbox extends Component {    
+export default class Listener extends Component {    
     render() {
        const {id, aim, style} = this.props;
-       const gd = document.getElementById(aim);
+       if (document.getElementById(aim)) var gd = document.getElementById(aim);
        
        function attach() {
-         var xaxis = gd._fullLayout.mapbox._subplot.xaxis;
-         var yaxis = gd._fullLayout.mapbox._subplot.yaxis;
+         var xaxis = gd._fullLayout.xaxis;
+         var yaxis = gd._fullLayout.yaxis;
          var l = gd._fullLayout.margin.l;
          var t = gd._fullLayout.margin.t;
          
@@ -19,18 +19,24 @@ export default class Listener_maxbox extends Component {
            Plotly.relayout(gd, 'title', xInDataCoord +' and '+ yInDataCoord );
          });
        }
-
-       Plotly.relayout(gd,'title').then(attach);           
+         
+       if (document.getElementById(aim)) Plotly.relayout(gd,'title').then(attach);
+       function rr() {
+          if (document.getElementById(aim)){
+                  return gd._fullLayout.title
+          } else { return '' }
+       } 
+          
        return (
             <div 
               id = {id}
-              style = {style}>{gd._fullLayout.title}
+              style = {style}>{rr()}
               </div>
         );
     }
 }
 
-Listener_maxbox.propTypes = {
+Listener.propTypes = {
     id : PropTypes.string.isRequired,
     aim : PropTypes.string.isRequired,
     style : PropTypes.object
